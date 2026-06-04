@@ -1,3 +1,0 @@
-public static class MongoConnectionBuilderService() {
-    System.out.println("mongo connection builder service");
-}
