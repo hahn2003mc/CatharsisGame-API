@@ -33,8 +33,60 @@ public class userDataServiceImpl implements userDataService {
     }
 
     @Override
-    public void saveUserData(userData userData) {
+    public String saveUserData(userData userData) {
+        String username = userData.getUsername();
+        boolean accountExists = checkIfAccountExists(username);
+        if (!accountExists) {
+            return "ERROR: Cannot update data for user. Account with username " + username + " does not exist";
+        }
         mongoTemplate.save(userData);
+        return "Updated user data for " + username;
+    }
+
+    @Override
+    public String initializeNewAccount(String username) {
+        boolean accountExists = checkIfAccountExists(username);
+        if (accountExists) {
+            return "An account with username " + username + " already exists";
+        }
+        userData newUserData = new userData();
+        statistics newStatistics = new statistics();
+        enemiesKilled newEnemiesKilled = new enemiesKilled();
+        newStatistics.setEnemiesKilled(newEnemiesKilled);
+        newUserData.setStatistics(newStatistics);
+        newUserData.setUsername(username.trim());
+        mongoTemplate.save(newUserData);
+        return "Successfully created new account for " + username;
+
+    }
+
+    @Override
+    public String updateEnemiesKilledByMobDeltaAndUsername(String username, enemiesKilled enemiesKilledUpdates) {
+        boolean accountExists = checkIfAccountExists(username);
+        if (!accountExists) {
+            return "ERROR: Cannot update data. An account with username " + username + " does not exist.";
+        }
+        userData userData = getUserData(username);
+        enemiesKilled enemiesKilled = userData.getStatistics().getEnemiesKilled();
+        enemiesKilled.setSpiders(enemiesKilled.getSpiders() + enemiesKilledUpdates.getSpiders());
+        enemiesKilled.setSkeletons(enemiesKilled.getSkeletons() + enemiesKilledUpdates.getSkeletons());
+        enemiesKilled.setDragons(enemiesKilled.getDragons() + enemiesKilledUpdates.getDragons());
+        mongoTemplate.save(userData);
+        return "Updated statistic values for user" + username;
+    }
+
+    private boolean checkIfAccountExists(String username) {
+        Query query = new Query();
+
+        query.addCriteria(
+            Criteria.where("username").is(username)
+        );
+
+        userData result = mongoTemplate.findById(username, userData.class);
+        if (result != null) {
+            return true;
+        }
+        return false;
     }
 
 }

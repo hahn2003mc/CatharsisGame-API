@@ -1,0 +1,14 @@
+{
+  "_id": {
+    "$oid": "6a1f74a5fe3e07ed736cb82c"
+  },
+  "username": "admin",
+  "statistics": {
+    "enemies_killed": {
+      "spiders": 8,
+      "skeletons": 35,
+      "dragons": 1
+    },
+    "level": 4
+  }
+}

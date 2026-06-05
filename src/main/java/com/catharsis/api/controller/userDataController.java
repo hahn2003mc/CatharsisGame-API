@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.catharsis.api.model.*;
 import com.catharsis.api.service.*;
+import com.catharsis.api.dto.*;
 
 
 @RestController
@@ -22,15 +23,46 @@ public class userDataController {
         this.userDataService = userDataService;
     }
 
-    @PostMapping("/userData")
+    @PostMapping("/newAcc")
+    public ResponseEntity<?> createNewAccount(@RequestBody userData userData) {
+        String username = userData.getUsername();
+        if (!isValidUsername(username)) {
+            return ResponseEntity.badRequest().build();
+        }
+        System.out.println("Attempting to make a new account for " + userData.getUsername());
+        String output = (userDataService.initializeNewAccount(username));
+        System.out.println(output);
+        return ResponseEntity.ok(output);
+    }
+
+    @PostMapping("/saveUserData")
     public ResponseEntity<?> save(@RequestBody userData userData) {
         userDataService.saveUserData(userData);
-        return ResponseEntity.ok(userData);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/updateEnemiesCounts")
+    public ResponseEntity<?> updateEnemiesCounts(@RequestBody updateEnemiesRequest request) {
+
+        String username = request.getUsername();
+        enemiesKilled enemiesKilled = request.getEnemiesKilled();
+
+        String output = userDataService.updateEnemiesKilledByMobDeltaAndUsername(username, enemiesKilled);
+
+        return ResponseEntity.ok(output);
     }
 
     @GetMapping("/healthCheck")
     public String test() {
         return "API is running";
+    }
+
+    private boolean isValidUsername(String username) {
+        if (username == null || username.endsWith("=")) {
+            System.out.println("Input data of wrong format");
+            return false;
+        }
+        return true;
     }
 
 }
