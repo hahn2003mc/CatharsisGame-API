@@ -2,15 +2,15 @@ package com.catharsis.api.model;
 
 public class statistics {
 
-    private String level;
+    private int level;
 
     private enemiesKilled enemiesKilled;
     
-    public String getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 

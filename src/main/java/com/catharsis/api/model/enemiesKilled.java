@@ -2,11 +2,16 @@ package com.catharsis.api.model;
 
 public class enemiesKilled {
     private int spiders;
+    private int grunts;
     private int skeletons;
     private int dragons;
 
     public int getSpiders() {
         return spiders;
+    }
+
+    public int getGrunts() {
+        return grunts;
     }
 
     public int getSkeletons() {
@@ -19,6 +24,10 @@ public class enemiesKilled {
 
     public void setSpiders(int spiders) {
         this.spiders = spiders;
+    }
+
+    public void setGrunts(int grunts) {
+        this.grunts = grunts;
     }
 
     public void setSkeletons(int skeletons) {

@@ -53,11 +53,11 @@ public class userDataServiceImpl implements userDataService {
         statistics newStatistics = new statistics();
         enemiesKilled newEnemiesKilled = new enemiesKilled();
         newStatistics.setEnemiesKilled(newEnemiesKilled);
+        newStatistics.setLevel(1);
         newUserData.setStatistics(newStatistics);
         newUserData.setUsername(username.trim());
         mongoTemplate.save(newUserData);
         return "Successfully created new account for " + username;
-
     }
 
     @Override
@@ -69,10 +69,24 @@ public class userDataServiceImpl implements userDataService {
         userData userData = getUserData(username);
         enemiesKilled enemiesKilled = userData.getStatistics().getEnemiesKilled();
         enemiesKilled.setSpiders(enemiesKilled.getSpiders() + enemiesKilledUpdates.getSpiders());
+        enemiesKilled.setGrunts(enemiesKilled.getGrunts() + enemiesKilledUpdates.getGrunts());
         enemiesKilled.setSkeletons(enemiesKilled.getSkeletons() + enemiesKilledUpdates.getSkeletons());
         enemiesKilled.setDragons(enemiesKilled.getDragons() + enemiesKilledUpdates.getDragons());
         mongoTemplate.save(userData);
         return "Updated statistic values for user" + username;
+    }
+
+    @Override
+    public String updateLevel(String username) {
+        boolean accountExists = checkIfAccountExists(username);
+        if (!accountExists) {
+            return "ERROR: Cannot update data for user. Account with username " + username + " does not exist";
+        }
+        userData userData = getUserData(username);
+        int currentLevel = userData.getStatistics().getLevel();
+        userData.getStatistics().setLevel(currentLevel + 1);
+        mongoTemplate.save(userData);
+        return "Updated user data for " + username;
     }
 
     private boolean checkIfAccountExists(String username) {

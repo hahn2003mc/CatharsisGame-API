@@ -16,4 +16,6 @@ public interface userDataService {
     String initializeNewAccount(String username);
 
     String updateEnemiesKilledByMobDeltaAndUsername(String username, enemiesKilled enemiesKilled);
+
+    String updateLevel(String username);
 }

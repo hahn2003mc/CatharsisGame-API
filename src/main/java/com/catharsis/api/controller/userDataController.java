@@ -52,6 +52,13 @@ public class userDataController {
         return ResponseEntity.ok(output);
     }
 
+        @PostMapping("/completedLevel")
+    public ResponseEntity<?> updateLevel(@RequestBody userData userData) {
+        String username = userData.getUsername();
+        userDataService.updateLevel(username);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/healthCheck")
     public String test() {
         return "API is running";
